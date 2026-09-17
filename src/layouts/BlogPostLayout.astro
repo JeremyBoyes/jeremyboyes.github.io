@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import ShareButtons from '../components/ShareButtons.astro';
+import { slugify, formatDate } from '../lib/content';
 
 interface Props {
   post: {
@@ -20,16 +21,6 @@ const displayUpdated = post.lastUpdated ?? post.date;
 const categoryList = post.categories ?? [];
 const hasCategories = categoryList.length > 0;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
-const slugify = (value: string) =>
-  value.toLowerCase().trim().replace(/\s+/g, '-');
-
-const formatDate = (value: Date) =>
-  value.toLocaleDateString('en-NZ', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 ---
 
 <BaseLayout

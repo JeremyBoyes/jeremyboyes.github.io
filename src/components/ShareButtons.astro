@@ -11,6 +11,7 @@ const encodedTitle = encodeURIComponent(title);
 const shareLinks = {
   twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
   facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
 };
 ---
 
@@ -37,6 +38,17 @@ const shareLinks = {
     title="Share on Facebook"
   >
     <i class="fa-brands fa-facebook-f"></i>
+  </a>
+
+  <a
+    href={shareLinks.linkedin}
+    class="share-btn"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share on LinkedIn"
+    title="Share on LinkedIn"
+  >
+    <i class="fa-brands fa-linkedin-in"></i>
   </a>
 
   <button class="share-btn copy-link-btn" aria-label="Copy link" title="Copy link">
@@ -103,6 +115,7 @@ const shareLinks = {
 
   .share-btn:nth-child(2):hover { background-color: #000; color: #fff; } /* X */
   .share-btn:nth-child(3):hover { background-color: #1877f2; color: #fff; } /* Facebook */
+  .share-btn:nth-child(4):hover { background-color: #0a66c2; color: #fff; } /* LinkedIn */
   .copy-link-btn:hover { background-color: #6c757d; color: #fff; }
 
   @media (max-width: 480px) {

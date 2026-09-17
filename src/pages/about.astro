@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { githubUrl, linkedinUrl, showGithub } from '../lib/social-links';
 ---
 
 <BaseLayout
@@ -170,9 +171,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <h2>Connect</h2>
             <p>
               You can find me on{" "}
-              <a href="https://github.com/JeremyBoyes" target="_blank" rel="noopener noreferrer">GitHub</a>{" "}
-              and{" "}
-              <a href="https://www.linkedin.com/in/jeremyboyes/" target="_blank" rel="noopener noreferrer">LinkedIn</a>.
+              {showGithub && (
+                <>
+                  <a href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>{" "}
+                  and{" "}
+                </>
+              )}
+              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn</a>.
             </p>
           </section>
         </div>

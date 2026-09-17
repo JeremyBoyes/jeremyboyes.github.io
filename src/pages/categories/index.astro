@@ -1,19 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPublishedPosts, slugify, formatDate } from '../../lib/content';
 
-const slugify = (value: string) =>
-  value.toLowerCase().trim().replace(/\s+/g, '-');
-
-const formatDate = (value: Date) =>
-  value.toLocaleDateString('en-NZ', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-
-const posts = (await getCollection('posts'))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = await getPublishedPosts();
 
 const categoryMap = new Map<
   string,

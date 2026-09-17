@@ -1,5 +1,9 @@
 ---
 import '../styles/global.css';
+import { Image, getImage } from 'astro:assets';
+import avatarImage from '../assets/avatar.jpg';
+import ogImageSource from '../assets/og-image.png';
+import { githubUrl, linkedinUrl, showGithub } from '../lib/social-links';
 
 interface Props {
   pageTitle: string;
@@ -18,6 +22,14 @@ const {
 const siteTitle = 'Jeremy Boyes';
 const siteDescription = 'Application Packaging & Deployment | Intune | SCCM | PowerShell';
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const optimizedOgImage = await getImage({
+  src: ogImageSource,
+  width: 1200,
+  height: 630,
+  format: 'jpg',
+  quality: 80,
+});
+const ogImageURL = new URL(optimizedOgImage.src, Astro.site);
 ---
 
 <html lang="en">
@@ -25,6 +37,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Jeremy Boyes" href="/rss.xml" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
     <title>{metaTitle}</title>
@@ -35,9 +49,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={metaTitle} />
     <meta property="og:description" content={metaDescription} />
     <meta property="og:url" content={canonicalURL} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={metaTitle} />
     <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImageURL} />
 
     <link
       rel="stylesheet"
@@ -190,7 +208,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         justify-content: center;
         margin-bottom: 1.2rem;
         overflow: hidden;
-        transition: transform 0.2s ease;
       }
 
       .logo-circle img {
@@ -198,9 +215,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         height: 100%;
         object-fit: cover;
         display: block;
+        transition: transform 0.2s ease;
       }
 
-      .logo-circle:hover {
+      .logo-circle:hover img {
         transform: scale(1.06);
       }
 
@@ -635,7 +653,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         <div class="sidebar-main">
           <div class="brand">
             <a href="/" class="logo-circle" aria-label="Home">
-              <img src="/images/avatar.png" alt="Jeremy Boyes avatar" />
+              <Image src={avatarImage} alt="Jeremy Boyes headshot" width={224} height={224} />
             </a>
             <h1>{siteTitle}</h1>
             <p>{siteDescription}</p>
@@ -711,19 +729,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             </div>
           </div>
 
-          <a
-            class="sidebar-icon-btn"
-            href="https://github.com/JeremyBoyes"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-          >
-            <i class="fa-brands fa-github"></i>
-          </a>
+          {showGithub && (
+            <a
+              class="sidebar-icon-btn"
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <i class="fa-brands fa-github"></i>
+            </a>
+          )}
 
           <a
             class="sidebar-icon-btn"
-            href="https://www.linkedin.com/in/jeremyboyes/"
+            href={linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"

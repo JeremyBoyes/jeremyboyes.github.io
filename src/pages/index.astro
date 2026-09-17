@@ -1,20 +1,18 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublishedPosts, formatDate } from '../lib/content';
 
 const siteTitle = 'Jeremy Boyes';
 const siteDescription = 'Application Packaging & Deployment | Intune | SCCM | PowerShell';
 
-const allPosts = await getCollection('posts');
-const posts = allPosts
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .map(post => ({
-    title: post.data.title,
-    date: post.data.date.toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' }),
-    category: (post.data.categories ?? []).join(', '),
-    excerpt: post.data.description,
-    href: `/posts/${post.id}`,
-  }));
+const allPosts = await getPublishedPosts();
+const posts = allPosts.map(post => ({
+  title: post.data.title,
+  date: formatDate(post.data.date),
+  category: (post.data.categories ?? []).join(', '),
+  excerpt: post.data.description,
+  href: `/posts/${post.id}`,
+}));
 ---
 
 <BaseLayout
