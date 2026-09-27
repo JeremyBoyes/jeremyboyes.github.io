@@ -3,6 +3,12 @@ import BaseLayout from './BaseLayout.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import { slugify, formatDate } from '../lib/content';
 
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
 interface Props {
   post: {
     title: string;
@@ -12,15 +18,18 @@ interface Props {
     author?: string;
     categories?: string[];
   };
+  headings?: Heading[];
 }
 
-const { post } = Astro.props;
+const { post, headings = [] } = Astro.props;
 
 const siteTitle = 'Jeremy Boyes';
 const displayUpdated = post.lastUpdated ?? post.date;
 const categoryList = post.categories ?? [];
 const hasCategories = categoryList.length > 0;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const tocHeadings = headings.filter((heading) => heading.depth === 2);
+const showToc = tocHeadings.length > 1;
 ---
 
 <BaseLayout
@@ -121,6 +130,45 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       line-height: 1.7;
     }
 
+    .post-toc {
+      background: var(--sidebar-bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.1rem 1.4rem;
+      margin: 0 0 1.75rem;
+    }
+
+    .post-toc-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+
+    .post-toc ol {
+      margin: 0;
+      padding-left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .post-toc li {
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .post-toc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .post-toc a:hover {
+      text-decoration: underline;
+    }
+
     .post-body {
       color: var(--text);
       line-height: 1.85;
@@ -143,8 +191,35 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     .post-body :global(h2) {
       font-size: 1.5rem;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 0.35rem;
+    }
+
+    .post-body :global(h2:not(:first-of-type)) {
+      margin-top: 2.75rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .post-body :global(h3) {
+      font-size: 1.15rem;
+      margin-top: 1.6rem;
+      color: var(--accent);
+    }
+
+    .post-body :global(blockquote) {
+      margin: 1.25rem 0;
+      padding: 0.85rem 1.1rem;
+      border-left: 3px solid var(--accent);
+      background: var(--sidebar-bg);
+      border-radius: 0 10px 10px 0;
+      color: var(--text);
+    }
+
+    .post-body :global(blockquote p) {
+      margin: 0;
+    }
+
+    .post-body :global(blockquote p + p) {
+      margin-top: 0.6rem;
     }
 
     .post-body :global(a) {
@@ -172,10 +247,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     }
 
     .post-body :global(pre) {
+      position: relative;
       background: var(--sidebar-bg);
       border: 1px solid var(--line);
       border-radius: 14px;
-      padding: 1rem 1.1rem;
+      padding: 1rem 3.6rem 1rem 1.1rem;
       overflow-x: auto;
       margin: 1.25rem 0;
     }
@@ -184,6 +260,59 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       background: transparent;
       border: 0;
       padding: 0;
+    }
+
+    .post-body :global(.code-copy-btn) {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      background: var(--nav-active);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      opacity: 0.85;
+      transition: opacity 0.15s, background 0.15s;
+    }
+
+    .post-body :global(.code-copy-btn:hover) {
+      opacity: 1;
+      background: var(--surface);
+    }
+
+    .post-body :global(table) {
+      width: 100%;
+      margin: 1.25rem 0;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 0.95rem;
+      display: block;
+      overflow-x: auto;
+    }
+
+    .post-body :global(th),
+    .post-body :global(td) {
+      padding: 0.55rem 0.85rem;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .post-body :global(th) {
+      background: var(--nav-active);
+      color: var(--text);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .post-body :global(tbody tr:nth-child(even)) {
+      background: var(--sidebar-bg);
     }
 
     @media (max-width: 900px) {
@@ -235,9 +364,28 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         font-size: 1.15rem;
       }
 
+      .post-toc {
+        padding: 1rem 1.15rem;
+      }
+
+      .post-body :global(h2:not(:first-of-type)) {
+        margin-top: 2.25rem;
+        padding-top: 1.5rem;
+      }
+
       .post-body :global(pre) {
-        padding: 0.9rem 1rem;
+        padding: 0.9rem 3.2rem 0.9rem 1rem;
         border-radius: 12px;
+      }
+
+      .post-body :global(table) {
+        font-size: 0.88rem;
+        border-radius: 12px;
+      }
+
+      .post-body :global(th),
+      .post-body :global(td) {
+        padding: 0.45rem 0.65rem;
       }
     }
 
@@ -341,6 +489,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         </p>
       </header>
 
+      {showToc && (
+        <nav class="post-toc" aria-label="Table of contents" data-pagefind-ignore>
+          <div class="post-toc-label">Contents</div>
+          <ol>
+            {tocHeadings.map((heading) => (
+              <li>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
       <div class="post-body">
         <slot />
       </div>
@@ -348,4 +509,38 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <ShareButtons url={canonicalURL.href} title={post.title} />
     </article>
   </div>
+
+  <script>
+    function initCodeCopyButtons() {
+      const blocks = document.querySelectorAll<HTMLPreElement>('.post-body pre');
+      blocks.forEach((pre) => {
+        if (pre.querySelector('.code-copy-btn')) return;
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'code-copy-btn';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+
+        button.addEventListener('click', async () => {
+          const code = pre.querySelector('code');
+          const text = code ? code.innerText : pre.innerText;
+          try {
+            await navigator.clipboard.writeText(text);
+            button.textContent = 'Copied!';
+          } catch {
+            button.textContent = 'Error';
+          }
+          setTimeout(() => {
+            button.textContent = 'Copy';
+          }, 1800);
+        });
+
+        pre.appendChild(button);
+      });
+    }
+
+    initCodeCopyButtons();
+    document.addEventListener('astro:page-load', initCodeCopyButtons);
+  </script>
 </BaseLayout>
