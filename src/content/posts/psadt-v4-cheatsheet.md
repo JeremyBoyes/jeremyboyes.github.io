@@ -1,11 +1,13 @@
 ---
 title: "PSAppDeployToolkit v4 Cheatsheet"
-description: "A quick-reference cheatsheet of the most common PSAppDeployToolkit (PSADT) v4 commands used in real-world Intune and MECM deployments."
+description: "A quick-reference cheatsheet of the most common PSAppDeployToolkit (PSADT) v4 commands used in real-world Intune and SCCM deployments."
 date: 2025-11-01
 lastUpdated: 2026-09-27
 author: Jeremy Boyes
 categories: ["PSADT", "Packaging"]
 tags: ["blog"]
+coverImage: ./psadt-v4-cheatsheet.png
+coverImageAlt: "PSAppDeployToolkit v4 logo"
 ---
 
 PSAppDeployToolkit v4 introduces a fundamental shift in structure and command set compared to v3. Many engineers are still adapting to the differences. After recently transitioning to v4, I created this cheatsheet to capture the most common commands I use in real deployments.
@@ -29,7 +31,7 @@ PSAppDeployToolkit v4 introduces a fundamental shift in structure and command se
   <div class="callout-body">
     <div class="callout-title">Note</div>
     <div class="callout-text">
-      <p>When PSADT is run via Intune, MECM etc., it will most typically run in System Context. This will result in the following:</p>
+      <p>When PSADT is run via Intune, SCCM etc., it will most typically run in System Context. This will result in the following:</p>
       <ul>
         <li><code>$envUserName</code> = <code>SYSTEM</code></li>
         <li><code>$envUserProfile</code> = <code>C:\Windows\system32\config\systemprofile</code></li>

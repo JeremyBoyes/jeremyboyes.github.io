@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
 import { getPublishedPosts, formatDate } from '../lib/content';
 
 const siteTitle = 'Jeremy Boyes';
@@ -12,6 +13,8 @@ const posts = allPosts.map(post => ({
   category: (post.data.categories ?? []).join(', '),
   excerpt: post.data.description,
   href: `/posts/${post.id}`,
+  coverImage: post.data.coverImage,
+  coverImageAlt: post.data.coverImageAlt ?? post.data.title,
 }));
 ---
 
@@ -44,12 +47,37 @@ const posts = allPosts.map(post => ({
     }
 
     .post-card {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: 1.75rem;
       box-shadow: var(--shadow);
       transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .post-card-image {
+      flex: 0 0 41.6667%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--sidebar-bg);
+    }
+
+    .post-card-image img {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      padding: 0.25rem;
+    }
+
+    .post-card-body {
+      flex: 1 1 58.3333%;
+      min-width: 0;
     }
 
     .post-card-link:hover .post-card {
@@ -101,6 +129,22 @@ const posts = allPosts.map(post => ({
         padding: 1.25rem;
       }
     }
+
+    @media (max-width: 640px) {
+      .post-card {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .post-card-image {
+        flex: none;
+        width: 100%;
+      }
+
+      .post-card-image img {
+        aspect-ratio: 16 / 9;
+      }
+    }
   </style>
 
   <div class="home-page">
@@ -115,11 +159,23 @@ const posts = allPosts.map(post => ({
         {posts.map((post) => (
           <a class="post-card-link" href={post.href} data-pagefind-ignore>
             <article class="post-card">
-              <h2 data-pagefind-meta="title">{post.title}</h2>
-              <p data-pagefind-meta="description">{post.excerpt}</p>
-              <div class="post-meta" data-pagefind-ignore>
-                <span><i class="fa-regular fa-calendar"></i> {post.date}</span>
-                <span><i class="fa-regular fa-folder-open"></i> {post.category}</span>
+              {post.coverImage && (
+                <div class="post-card-image">
+                  <Image
+                    src={post.coverImage}
+                    alt={post.coverImageAlt}
+                    width={440}
+                    height={Math.round(440 * (post.coverImage.height / post.coverImage.width))}
+                  />
+                </div>
+              )}
+              <div class="post-card-body">
+                <h2 data-pagefind-meta="title">{post.title}</h2>
+                <p data-pagefind-meta="description">{post.excerpt}</p>
+                <div class="post-meta" data-pagefind-ignore>
+                  <span><i class="fa-regular fa-calendar"></i> {post.date}</span>
+                  <span><i class="fa-regular fa-folder-open"></i> {post.category}</span>
+                </div>
               </div>
             </article>
           </a>
