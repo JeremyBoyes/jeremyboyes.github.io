@@ -232,6 +232,15 @@ const ogImageURL = new URL(optimizedOgImage.src, Astro.site);
         color: var(--text);
       }
 
+      .brand-title-link {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .brand-title-link:hover {
+        text-decoration: underline;
+      }
+
       .brand p {
         margin: 0;
         color: var(--muted);
@@ -515,14 +524,20 @@ const ogImageURL = new URL(optimizedOgImage.src, Astro.site);
         }
 
         .mobile-header-title {
+          display: block;
           text-align: center;
           font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
           font-size: 1.05rem;
           font-weight: 800;
           color: var(--text);
+          text-decoration: none;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+
+        .mobile-header-title:hover {
+          text-decoration: underline;
         }
 
         .mobile-menu-overlay {
@@ -622,7 +637,7 @@ const ogImageURL = new URL(optimizedOgImage.src, Astro.site);
         <i class="fa-solid fa-bars"></i>
       </button>
 
-      <div class="mobile-header-title">{siteTitle}</div>
+      <a href="/" class="mobile-header-title" aria-label="Home">{siteTitle}</a>
 
       <div aria-hidden="true"></div>
     </header>
@@ -655,7 +670,7 @@ const ogImageURL = new URL(optimizedOgImage.src, Astro.site);
             <a href="/" class="logo-circle" aria-label="Home">
               <Image src={avatarImage} alt="Jeremy Boyes headshot" width={224} height={224} />
             </a>
-            <h1>{siteTitle}</h1>
+            <h1><a href="/" class="brand-title-link">{siteTitle}</a></h1>
             <p>{siteDescription}</p>
           </div>
 
