@@ -43,6 +43,11 @@ const showToc = tocHeadings.length > 1;
       padding: 1.3rem 2.3rem 1.25rem;
     }
 
+    .post-page-shell {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
     .post-toprow {
       display: flex;
       align-items: center;
@@ -51,8 +56,6 @@ const showToc = tocHeadings.length > 1;
     }
 
     .post-shell {
-      max-width: 860px;
-      margin: 0 auto;
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -517,15 +520,16 @@ const showToc = tocHeadings.length > 1;
   </style>
 
   <div class="content-post">
-    <div class="post-toprow">
-      <nav class="breadcrumb" aria-label="Breadcrumb" data-pagefind-ignore>
-        <a href="/">Home</a>
-        <span class="breadcrumb-separator">›</span>
-        <span class="breadcrumb-current">{post.title}</span>
-      </nav>
-    </div>
+    <div class="post-page-shell">
+      <div class="post-toprow">
+        <nav class="breadcrumb" aria-label="Breadcrumb" data-pagefind-ignore>
+          <a href="/">Home</a>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-current">{post.title}</span>
+        </nav>
+      </div>
 
-    <article class="post-shell" data-pagefind-body>
+      <article class="post-shell" data-pagefind-body>
       <header class="post-header">
         {hasCategories && (
           <div class="post-tags" data-pagefind-ignore>
@@ -574,6 +578,7 @@ const showToc = tocHeadings.length > 1;
 
       <ShareButtons url={canonicalURL.href} title={post.title} />
     </article>
+    </div>
   </div>
 
   <script>
