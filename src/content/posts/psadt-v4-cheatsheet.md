@@ -24,12 +24,19 @@ PSAppDeployToolkit v4 introduces a fundamental shift in structure and command se
 | `$envWinDir` | `C:\Windows` | |
 | `$envSystemDrive` | `C:\` | |
 
-### Notes
-
-When PSADT is run via Intune, MECM etc., it will most typically run in System Context. This will result in the following:
-
-- `$envUserName` = `SYSTEM`
-- `$envUserProfile` = `C:\Windows\system32\config\systemprofile`
+<div class="callout callout-tip">
+  <div class="callout-icon">ℹ️</div>
+  <div class="callout-body">
+    <div class="callout-title">Note</div>
+    <div class="callout-text">
+      <p>When PSADT is run via Intune, MECM etc., it will most typically run in System Context. This will result in the following:</p>
+      <ul>
+        <li><code>$envUserName</code> = <code>SYSTEM</code></li>
+        <li><code>$envUserProfile</code> = <code>C:\Windows\system32\config\systemprofile</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 ## Source File Location Variables (PSADT v4 vs v3)
@@ -46,10 +53,19 @@ When PSADT is run via Intune, MECM etc., it will most typically run in System Co
 Start-ADTMsiProcess -Action 'Install' -FilePath 'MyApp_1.0.msi' -LogFileName "MyApp_1.0" -ArgumentList '/qn'
 ```
 
-**Notes:** Default location for the MSI file is under `.\Files`
-
-- The name you choose for the logfile will automatically have `_install.log` appended to it. E.g. if you specify `MyApp_install.log` it will become `MyApp_install.log_Install.log`.
-- Default location for PSAppDeploy logfiles: `C:\Windows\Logs\Software`
+<div class="callout callout-tip">
+  <div class="callout-icon">ℹ️</div>
+  <div class="callout-body">
+    <div class="callout-title">Note</div>
+    <div class="callout-text">
+      <p>Default location for the MSI file is under <code>.\Files</code></p>
+      <ul>
+        <li>The name you choose for the logfile will automatically have <code>_install.log</code> appended to it. E.g. if you specify <code>MyApp_install.log</code> it will become <code>MyApp_install.log_Install.log</code>.</li>
+        <li>Default location for PSAppDeploy logfiles: <code>C:\Windows\Logs\Software</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 > **Edit:** The Patch My PC team have reached out to me regarding the log file naming behaviour and are looking into potential enhancements for a future version of PSADT.
 

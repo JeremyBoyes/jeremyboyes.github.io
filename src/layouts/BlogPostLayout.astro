@@ -222,6 +222,60 @@ const showToc = tocHeadings.length > 1;
       margin-top: 0.6rem;
     }
 
+    .post-body :global(.callout) {
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+      margin: 1.25rem 0;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      background: var(--sidebar-bg);
+      border: 1px solid var(--line);
+    }
+
+    .post-body :global(.callout-icon) {
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .post-body :global(.callout-body) {
+      min-width: 0;
+    }
+
+    .post-body :global(.callout-title) {
+      font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+
+    .post-body :global(.callout-text) {
+      font-size: 0.94rem;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .post-body :global(.callout-text p) {
+      margin: 0 0 0.6rem;
+    }
+
+    .post-body :global(.callout-text p:last-child) {
+      margin-bottom: 0;
+    }
+
+    .post-body :global(.callout-text ul),
+    .post-body :global(.callout-text ol) {
+      margin: 0.4rem 0 0;
+      padding-left: 1.2rem;
+    }
+
+    .post-body :global(.callout-text li) {
+      margin-bottom: 0.3rem;
+    }
+
     .post-body :global(a) {
       color: var(--accent);
       text-decoration: underline;
