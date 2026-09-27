@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
-import { getPublishedPosts, formatDate } from '../lib/content';
+import { getPublishedPosts, formatDate, slugify } from '../lib/content';
 
 const siteTitle = 'Jeremy Boyes';
 const siteDescription = 'Application Packaging & Deployment | Intune | SCCM | PowerShell';
@@ -10,7 +10,7 @@ const allPosts = await getPublishedPosts();
 const posts = allPosts.map(post => ({
   title: post.data.title,
   date: formatDate(post.data.date),
-  category: (post.data.categories ?? []).join(', '),
+  categories: post.data.categories ?? [],
   excerpt: post.data.description,
   href: `/posts/${post.id}`,
   coverImage: post.data.coverImage,
@@ -39,14 +39,8 @@ const posts = allPosts.map(post => ({
       gap: 1rem;
     }
 
-    .post-card-link {
-      display: block;
-      color: inherit;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
     .post-card {
+      position: relative;
       display: flex;
       gap: 1.5rem;
       align-items: stretch;
@@ -55,7 +49,24 @@ const posts = allPosts.map(post => ({
       border-radius: 16px;
       padding: 1.75rem;
       box-shadow: var(--shadow);
-      transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .post-card-title-link {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Stretched-link pattern: the title holds the real link, this
+       invisible overlay makes the whole card clickable. Elements that
+       need their own independent link (e.g. category tags) sit above
+       it with a higher z-index. */
+    .post-card-title-link::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
     }
 
     .post-card-image {
@@ -80,14 +91,28 @@ const posts = allPosts.map(post => ({
       min-width: 0;
     }
 
-    .post-card-link:hover .post-card {
+    .post-card:hover {
       background: var(--nav-active);
-      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
     }
 
-    .post-card-link:focus-visible .post-card {
+    .post-card-title-link:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    .post-card-category {
+      position: relative;
+      z-index: 2;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .post-card-category:hover {
+      color: var(--accent);
+      text-decoration: underline;
     }
 
     .post-card h2 {
@@ -114,7 +139,7 @@ const posts = allPosts.map(post => ({
       font-size: 0.95rem;
     }
 
-    .post-meta span {
+    .post-meta > span {
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
@@ -157,28 +182,39 @@ const posts = allPosts.map(post => ({
 
       <div class="post-list">
         {posts.map((post) => (
-          <a class="post-card-link" href={post.href} data-pagefind-ignore>
-            <article class="post-card">
-              {post.coverImage && (
-                <div class="post-card-image">
-                  <Image
-                    src={post.coverImage}
-                    alt={post.coverImageAlt}
-                    width={440}
-                    height={Math.round(440 * (post.coverImage.height / post.coverImage.width))}
-                  />
-                </div>
-              )}
-              <div class="post-card-body">
-                <h2 data-pagefind-meta="title">{post.title}</h2>
-                <p data-pagefind-meta="description">{post.excerpt}</p>
-                <div class="post-meta" data-pagefind-ignore>
-                  <span><i class="fa-regular fa-calendar"></i> {post.date}</span>
-                  <span><i class="fa-regular fa-folder-open"></i> {post.category}</span>
-                </div>
+          <article class="post-card">
+            {post.coverImage && (
+              <div class="post-card-image">
+                <Image
+                  src={post.coverImage}
+                  alt={post.coverImageAlt}
+                  width={440}
+                  height={Math.round(440 * (post.coverImage.height / post.coverImage.width))}
+                />
               </div>
-            </article>
-          </a>
+            )}
+            <div class="post-card-body">
+              <h2 data-pagefind-meta="title">
+                <a class="post-card-title-link" href={post.href} data-pagefind-ignore>
+                  {post.title}
+                </a>
+              </h2>
+              <p data-pagefind-meta="description">{post.excerpt}</p>
+              <div class="post-meta" data-pagefind-ignore>
+                <span><i class="fa-regular fa-calendar"></i> {post.date}</span>
+                {post.categories.length > 0 && (
+                  <span>
+                    <i class="fa-regular fa-folder-open"></i>
+                    <span>{post.categories.map((category, index) => (
+                      <>
+                        <a href={`/categories/${slugify(category)}/`} class="post-card-category">{category}</a>{index < post.categories.length - 1 && ', '}
+                      </>
+                    ))}</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          </article>
         ))}
       </div>
     </div>

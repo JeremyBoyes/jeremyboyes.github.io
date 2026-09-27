@@ -70,17 +70,41 @@ const showToc = tocHeadings.length > 1;
       border-bottom: 1px solid var(--line);
     }
 
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .post-tag {
+      display: inline-block;
+      font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+      border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--surface));
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .post-tag:hover {
+      background: color-mix(in srgb, var(--accent) 24%, var(--surface));
+      border-color: var(--accent);
+    }
+
     .post-meta-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1.25rem;
       margin-bottom: 1.4rem;
       padding-bottom: 1rem;
       border-bottom: 1px solid var(--line);
-    }
-
-    .post-meta-grid--two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .meta-block {
@@ -88,10 +112,6 @@ const showToc = tocHeadings.length > 1;
       flex-direction: column;
       gap: 0.2rem;
       min-width: 0;
-    }
-
-    .meta-block--right {
-      text-align: right;
     }
 
     .meta-label {
@@ -107,10 +127,6 @@ const showToc = tocHeadings.length > 1;
       font-size: 1.05rem;
       line-height: 1.35;
       overflow-wrap: anywhere;
-    }
-
-    .meta-value-categories {
-      display: inline;
     }
 
     .post-header h1 {
@@ -460,10 +476,6 @@ const showToc = tocHeadings.length > 1;
         gap: 0.85rem;
       }
 
-      .meta-block--right {
-        text-align: left;
-      }
-
       .meta-label {
         font-size: 0.76rem;
       }
@@ -515,10 +527,17 @@ const showToc = tocHeadings.length > 1;
 
     <article class="post-shell" data-pagefind-body>
       <header class="post-header">
-        <div
-          class:list={['post-meta-grid', !hasCategories && 'post-meta-grid--two']}
-          data-pagefind-ignore
-        >
+        {hasCategories && (
+          <div class="post-tags" data-pagefind-ignore>
+            {categoryList.map((category) => (
+              <a href={`/categories/${slugify(category)}/`} class="post-tag">
+                {category}
+              </a>
+            ))}
+          </div>
+        )}
+
+        <div class="post-meta-grid" data-pagefind-ignore>
           <div class="meta-block">
             <span class="meta-label">By</span>
             <span class="meta-value">{post.author ?? 'Jeremy Boyes'}</span>
@@ -528,24 +547,6 @@ const showToc = tocHeadings.length > 1;
             <span class="meta-label">Last Updated</span>
             <span class="meta-value">{formatDate(displayUpdated)}</span>
           </div>
-
-          {hasCategories && (
-            <div class="meta-block meta-block--right">
-              <span class="meta-label">Categories</span>
-              <div class="meta-value meta-value-categories">
-                {categoryList.map((category, index) => (
-                  <>
-                    <a href={`/categories/${slugify(category)}/`} class="category-link">
-                      {category}
-                    </a>
-                    {index < categoryList.length - 1 && (
-                      <span class="category-separator">, </span>
-                    )}
-                  </>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         <h1 data-pagefind-meta="title">{post.title}</h1>
